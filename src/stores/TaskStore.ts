@@ -13,4 +13,17 @@ export const useTaskStore = defineStore('taskStore', {
       { id: 2, title: 'play Gloomhaven', isFav: true },
     ],
   }),
+  getters: {
+    favs(): Task[] | undefined {
+      return this.tasks.filter((task) => task.isFav);
+    },
+    favCount(): number {
+      return this.tasks.reduce((prev, curr) => {
+        return curr.isFav ? prev + 1 : prev;
+      }, 0);
+    },
+    totalCount: (state) => {
+      return state.tasks.length;
+    },
+  },
 });
