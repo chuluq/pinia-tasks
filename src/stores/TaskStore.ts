@@ -37,16 +37,43 @@ export const useTaskStore = defineStore('taskStore', {
         this.isLoading = false;
       }
     },
-    addTask(task: Task) {
+    async addTask(task: Task) {
       this.tasks.push(task);
+
+      try {
+        await fetch('http://localhost:3000/tasks', {
+          method: 'POST',
+          body: JSON.stringify(this.tasks),
+          headers: { 'Content-Type': 'application/json' },
+        });
+      } catch (error) {
+        console.error('error create task', error);
+      }
     },
-    deleteTask(id: number) {
+    async deleteTask(id: number) {
       this.tasks = this.tasks.filter((task) => task.id !== id);
+
+      try {
+        await fetch('http://localhost:3000/tasks/' + id, {
+          method: 'DELETE',
+        });
+      } catch (error) {
+        console.error('error delete task', error);
+      }
     },
-    toggleFav(id: number) {
+    async toggleFav(id: number) {
       const task = this.tasks.find((task) => task.id === id);
       if (task) {
         task.isFav = !task.isFav;
+      }
+
+      try {
+        await fetch('http://localhost:3000/tasks/' + id, {
+          method: 'PUT',
+          body: JSON.stringify(task),
+        });
+      } catch (error) {
+        console.error('error create tasks', error);
       }
     },
   },
