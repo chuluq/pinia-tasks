@@ -7,11 +7,9 @@ export interface Task {
 }
 
 export const useTaskStore = defineStore('taskStore', {
-  state: (): { tasks: Task[] } => ({
-    tasks: [
-      { id: 1, title: 'buy some milk', isFav: false },
-      { id: 2, title: 'play Gloomhaven', isFav: true },
-    ],
+  state: (): { tasks: Task[]; isLoading: boolean } => ({
+    tasks: [],
+    isLoading: false,
   }),
   getters: {
     favs(): Task[] | undefined {
@@ -27,6 +25,18 @@ export const useTaskStore = defineStore('taskStore', {
     },
   },
   actions: {
+    async getTasks() {
+      try {
+        this.isLoading = true;
+        const res = await fetch('http://localhost:3000/tasks');
+        const data = await res.json();
+        this.tasks = data;
+      } catch (error) {
+        console.error('error get tasks', error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
     addTask(task: Task) {
       this.tasks.push(task);
     },

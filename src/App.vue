@@ -7,6 +7,8 @@ import { useTaskStore } from './stores/TaskStore.ts';
 const taskStore = useTaskStore();
 
 const filter = ref<'all' | 'favs'>('all');
+
+taskStore.getTasks();
 </script>
 
 <template>
@@ -24,6 +26,8 @@ const filter = ref<'all' | 'favs'>('all');
       <button @click="filter = 'all'">All tasks</button>
       <button @click="filter = 'favs'">Fav tasks</button>
     </nav>
+
+    <div class="loading" v-if="taskStore.isLoading">Loading tasks...</div>
 
     <div v-if="filter === 'all'" class="task-list">
       <p>You have {{ taskStore.totalCount }} tasks left to do</p>
